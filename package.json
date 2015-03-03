@@ -1,0 +1,15 @@
+{
+    "name": "neuedahomework",
+    "version": "0.0.1",
+    "author": "Kaspars Bulins",
+    "description": "Neueda homework",
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "matchdep": "*",
+        "grunt-bump": "*",
+        "amdclean": "~2.3.0",
+        "grunt-contrib-copy": "*",
+        "grunt-contrib-sass": "0.4.0",
+        "grunt-contrib-requirejs": "*"
+    }
+}

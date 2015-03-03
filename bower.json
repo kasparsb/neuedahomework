@@ -1,0 +1,32 @@
+{
+  "name": "neuedahomework",
+  "version": "0.0.1",
+  "homepage": "",
+  "authors": [
+    "Kaspars Bulins <kasparsb@hotmail.com>"
+  ],
+  "description": "Neueda homework",
+  "main": "app.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "neueda"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "react": "~0.12.2",
+    "requirejs": "~2.1.16",
+    "velocity": "~1.2.2",
+    "socket.io-client": "~1.3.4"
+  }
+}
