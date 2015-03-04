@@ -1,0 +1,80 @@
+.circular-graph {
+    $width: 144px;
+    $height: 144px;
+    $strokeWidth: 4px;
+
+    $defPassiveColor: #dce1e7;
+
+    float: left;
+    position: relative;
+    width: $width;
+    
+    .graph-container {
+        position: relative
+    }
+
+    svg {
+        width: 100%;
+        height: $height;
+    }
+
+    .graph-value {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 50%;
+        font-size: 20pt;
+        color: $defPassiveColor;
+        @include transform(translateY(-50%));
+    }
+
+    .decor, .graph {
+        fill: none;
+    }
+
+    .decor {
+        stroke-width: $strokeWidth+2px;
+        stroke: #dce1e7;
+    }
+
+    .graph {
+        stroke-width: $strokeWidth;
+        stroke: #b9c1ce;
+    }
+
+    .graph-legend span {
+        display: block;
+        text-align: center
+    }
+    .graph-legend .caption {
+        color: #515560;
+        font-size: 0.8em
+    }
+    .graph-legend .value {
+        color: #515560
+    }
+}
+
+// Mixin for custom graph type
+@mixin circular-graph-type($color) {
+    .graph {
+        stroke: $color
+    }
+    .graph-value {
+        color: $color
+    }
+}
+
+// Custom graph types
+.circular-graph.graph-error {
+    @include circular-graph-type(#ef7955);
+}
+.circular-graph.graph-success {
+    @include circular-graph-type(#4ec281);
+    
+}
+.circular-graph.graph-failure {
+    @include circular-graph-type(#4b98dc);
+}
