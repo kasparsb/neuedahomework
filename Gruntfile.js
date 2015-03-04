@@ -15,14 +15,24 @@ module.exports = function(grunt){
                 push: false,
                 createTag: false
             }
-        },/*,
+        },
         sass: {
             dist: {
                 files: {
                     'build/site.css': 'assets/sass/main.scss' 
                 }
             }
-        },*/
+        },
+        cssmin: {
+            dist: {
+                options: {
+                    target: 'build/..'
+                },
+                files: {
+                    'build/site.min.css': ['build/site.css']
+                }
+            }
+        },
         copy: {
             vendors: {
                 files: [
@@ -100,9 +110,9 @@ module.exports = function(grunt){
             }
         },
         watch: {
-            js: {
-                files: 'assets/js/*.js',
-                tasks: ['requirejs']
+            css: {
+                files: 'assets/sass/*.scss',
+                tasks: ['sass', 'cssmin']
             }
         }
     });

@@ -8,8 +8,11 @@
         "matchdep": "*",
         "grunt-bump": "*",
         "amdclean": "~2.3.0",
+        "grunt-contrib-cssmin": "*",
         "grunt-contrib-copy": "*",
         "grunt-contrib-sass": "0.4.0",
-        "grunt-contrib-requirejs": "*"
+        "grunt-contrib-requirejs": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-contrib-sass": "0.4.0"
     }
 }
