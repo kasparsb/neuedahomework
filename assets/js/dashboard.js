@@ -17,6 +17,11 @@ define(function(require){
             success: 0
         },
 
+        /**
+         * Total ammount of transactions
+         */
+        _total: 0,
+
         _graphEvents: [ 'error', 'failure', 'success' ],
 
         /**
@@ -37,41 +42,46 @@ define(function(require){
             if ( typeof this._eventTypes[data.event] != 'undefined' )
                 this._eventTypes[data.event]++;
 
+            this.updateTotal();
             this.updateEventStats();
+        },
+
+        updateTotal: function() {
+            this._total = _(this._graphEvents).reduce( function(m, ev){ 
+                
+                return this._eventTypes[ev] + m 
+
+            }, 0, this );
         },
 
         /**
          * Calculate every event type percentage
          */
         updateEventStats: function() {
-            
-
-            // Total ammount of transactions
-            var total = _(this._graphEvents).reduce( function(m, ev){ 
-                return this._eventTypes[ev] + m 
-            }, 0, this );
 
             // Update percentages for each event type and store in state
             _(this._graphEvents).each(function(ev){
                 var s = {};
-                s[ev] = {
-                    percents: Math.round( this._eventTypes[ev] / total * 100 ),
-                    count: this._eventTypes[ev]
-                }
-                
+                s[ev] = this.getEventStateOjbect( ev );
+
                 this.setState( s );
 
             }, this )
+        },
+
+        getEventStateOjbect: function(ev) {
+            return {
+                percents: Math.round( this._total == 0 ? 0 : this._eventTypes[ev] / this._total * 100 ),
+                count: this._eventTypes[ev],
+                caption: ev
+            }
         },
 
         getInitialState: function() {
             var s = {};
 
              _(this._graphEvents).each(function(ev){
-                s[ev] = {
-                    percents: 0,
-                    count: 0
-                }
+                s[ev] = this.getEventStateOjbect( ev )
             }, this);
 
             return s;
@@ -90,9 +100,8 @@ define(function(require){
                     {
                         ref: 'graph'+ev,
                         className: 'graph-'+ev,
-
-                        state: this.state[ev].percents,
-                        count: this.state[ev].count
+                        // Graph data
+                        item: this.state[ev]
                     }
                 )
             }, this)

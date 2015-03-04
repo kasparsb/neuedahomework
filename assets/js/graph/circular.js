@@ -24,35 +24,43 @@ define(['react', 'underscore', 'snapsvg'], function(React, _, Snap){
             });
 
             // Circle length
-            var pathLength = this._graph.getTotalLength();
+            this._graphTotalLength = this._graph.getTotalLength();
+
+            var dashArray = [this._graphTotalLength, this._graphTotalLength];
 
             /**
              * Graph length is 70% of pathLength
              * This is used, to calculate graph depending on state value
              */
-            this._graphLength = Math.round( pathLength * 0.7 );
+            this._graphLength = Math.round( this._graphTotalLength * 0.7 );
 
             // This will remain static. Its purpose is decorative
             this._graphDecor.attr({
-                strokeDasharray: [pathLength, pathLength],
-                // Start as empty graph
-                strokeDashoffset: pathLength - this._graphLength
+                strokeDasharray: dashArray,
+                // Decor is full
+                strokeDashoffset: this._graphTotalLength - this._graphLength
             });
             
             // Set up stroke dasharray and dashoffset. This is used to animate graph
             this._graph.attr({
-                strokeDasharray: [pathLength, pathLength],
+                strokeDasharray: dashArray,
 
-                // This will be animated
-                strokeDashoffset: this._graphLength
+                // Set graph as empty (0%)
+                strokeDashoffset: this._getDashoffsetByPercents( 0 )
             });
         },
 
-        _createGraphValue: function() {
-            this._graphValue = this._graphContainer.text( 120, 18, '' );
-            this._graphValue.attr({
-                color: '#000000'
-            });
+        /**
+         * Calculate SVG strokeDashoffset, so it is percents of full grpah
+         */
+        _getDashoffsetByPercents: function( percents ) {
+            return this._graphTotalLength - this._graphLength * ( percents / 100 );
+        },
+
+        _animateGraphState: function( props ) {
+            this._graph.animate({
+                strokeDashoffset: this._getDashoffsetByPercents( props.item.percents )
+            }, 700)
         },
 
         /**
@@ -62,34 +70,46 @@ define(['react', 'underscore', 'snapsvg'], function(React, _, Snap){
             this._graphContainer = new Snap( this.getDOMNode().getElementsByTagName('svg')[0] );
             
             this._createGraphs();
-            this._createGraphValue();
 
-            // Create debounce animate callback
-            this._anim = _.debounce( _.bind( this.animateState, this ), 50 );
+            // Create debounced animate callback
+            this._anim = _.debounce( _.bind( this._animateGraphState, this ), 50 );
             this._anim( this.props );
         },
 
         componentWillReceiveProps: function( newProps ) {
-            this._graphValue.node.innerHTML = this.props.count;
             this._anim( newProps );
         },
 
-        animateState: function( props ) {
-            return;
-
-            var p = isNaN( props.state ) ? 0 : props.state;
-
-            console.log('animate', p);
-
-            this._graph.animate({
-                strokeDashoffset: 100
-            }, 700)
-        },
-
         render: function() {
-            return React.DOM.div( {
-                className:'circular-graph '+this.props.className
-            }, React.DOM.svg() )
+            return React.DOM.div( 
+                {
+                    className:'circular-graph '+this.props.className
+                },
+                React.DOM.div(
+                    {
+                        className: 'graph-container'
+                    },
+                    // Graph svg
+                    React.DOM.svg(),
+                    // Percents
+                    React.DOM.label(
+                        {
+                            className: 'graph-value'
+                        }, 
+                        this.props.item.percents+'%'
+                    )
+                ),
+                // Percents
+                React.DOM.div(
+                    {
+                        className: 'graph-legend'
+                    }, 
+                    [
+                        React.DOM.span({ className:'caption' }, this.props.item.caption),
+                        React.DOM.span({ className:'value' }, this.props.item.count)
+                    ]
+                )
+            )
         }
     })
 })
