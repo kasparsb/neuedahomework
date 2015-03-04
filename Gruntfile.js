@@ -60,6 +60,11 @@ module.exports = function(grunt){
                     {
                         src: 'bower_components/socket.io-client/socket.io.js', 
                         dest: 'assets/js/vendor/socket.io.js'
+                    },
+                    // Snap.svg
+                    {
+                        src: 'bower_components/snap.svg/dist/snap.svg.js', 
+                        dest: 'assets/js/vendor/snap.svg.js'
                     }
                 ]
             }
