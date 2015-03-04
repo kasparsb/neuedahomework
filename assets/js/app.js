@@ -17,6 +17,6 @@ define(function( require ){
 
     React.render( 
         React.createElement( Dashboard, null ), 
-        document.getElementsByTagName('body')[0]
+        document.querySelector('body .app')
     );
 });
