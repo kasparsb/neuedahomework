@@ -1,7 +1,7 @@
 /**
  * Events list
  */
-define(['react'], function(React, moment){
+define(['react'], function(React){
 
     return React.createClass({
         displayName: 'EventsList',
@@ -9,6 +9,8 @@ define(['react'], function(React, moment){
         createRow: function( data ) {
 
             var d = new Date(data.time);
+            var date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+            var time = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
 
             return React.DOM.tr(
                 {
@@ -16,7 +18,7 @@ define(['react'], function(React, moment){
                     className: 'eventtype-'+data.event
                 },
                 React.DOM.td( { className: 'time' }, 
-                    d.toLocaleDateString()+' '+d.toLocaleTimeString()
+                    date+' '+time
                 ),
                 React.DOM.td( { className: 'event' }, data.event ),
                 React.DOM.td( { className: 'component' }, data.testCase.component ),
