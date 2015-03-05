@@ -7,6 +7,9 @@ var React = require('react'),
     io = require('socketio'),
     _ = require('underscore'),
     CircularGraph = require('graph/circular');
+    EventsList = require('list/events');
+    Header = require('el/header');
+    $ = require('jquery');
 
 return React.createClass({
     displayName: 'Dashboard',
@@ -26,9 +29,33 @@ return React.createClass({
     _graphEvents: [ 'error', 'failure', 'success' ],
 
     /**
+     * Load events from history endpoint
+     */
+    loadHistoricEvents: function() {
+        return $.get( 'http://testevents.neueda.lv/history', _.bind( this.handleHistoryEvents, this ), 'json' );
+    },
+
+    handleHistoryEvents: function( events ) {
+        this.setState( {items: events} );
+
+        events.forEach(function(ev){
+            this.addEventType(ev.event);
+        }, this);
+        this.updateTotal();
+        this.updateEventStats();
+    },
+
+    addEventToList: function( data ) {
+        this.state.items.unshift( data );
+
+        this.setState( {items: this.state.items} );
+    },
+
+    /**
      * Setup live data polling
      */
     setupPolling: function() {
+        
         this._socket = io('http://testevents.neueda.lv:80', {
             path: '/live'
         });
@@ -40,11 +67,17 @@ return React.createClass({
      * Add new event
      */
     pushEvent: function( data ) {
-        if ( typeof this._eventTypes[data.event] != 'undefined' )
-            this._eventTypes[data.event]++;
+        this.addEventToList( data );
 
+        this.addEventType( data.event );
+        
         this.updateTotal();
         this.updateEventStats();
+    },
+
+    addEventType: function(ev) {
+        if ( typeof this._eventTypes[ev] != 'undefined' )
+            this._eventTypes[ev]++;
     },
 
     updateTotal: function() {
@@ -79,7 +112,9 @@ return React.createClass({
     },
 
     componentDidMount: function() {
-        this.setupPolling();
+        // Load history events and then start polling for new events
+        this.loadHistoricEvents()
+            .done( _.bind( this.setupPolling, this ) );
     },
 
     getInitialState: function() {
@@ -115,8 +150,26 @@ return React.createClass({
             },  
 
             // Circular graphs
-            React.DOM.div({ className: 'circular-graphs' }, graphs)
-            
+            React.DOM.div(
+                { 
+                    className: 'circular-graphs doc' 
+                }, 
+                graphs
+            ),
+            // latest events list
+            React.createElement( Header, { title: 'Test events list' } ),
+            React.DOM.div(
+                { 
+                    className: 'events-list doc' 
+                }, 
+                React.createElement(
+                    EventsList,
+                    {
+                        ref: 'list',
+                        items: this.state.items
+                    }
+                )
+            )
         )
     }
 })

@@ -1,0 +1,25 @@
+.data-list {
+
+	width: 100%;
+
+	th, td {
+		font-size: 14pt;
+		font-weight: normal;
+		border-bottom: 1px solid #d4d8e1;
+		padding: 6px 10px
+	}
+
+	th {
+		text-align: left;
+		font-weight: bold
+	}
+
+	td {
+
+	}
+
+	tr:hover th,
+	tr:hover td {
+		background: #ebecf0
+	}
+}

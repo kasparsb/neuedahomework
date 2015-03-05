@@ -1,16 +1,17 @@
 @import 'mixins';
 @import 'globals';
 @import 'header';
+@import 'data-list';
 @import 'circular-graph';
+@import 'events-list';
 
 section.main {
-    padding: 40px 0;
-    background: #f4f5f7;
+    padding: 0 0 40px
 }
 
 .circular-graphs {
     width: 612px;
-    margin: 0 auto;
+    margin: 40px auto;
     overflow: hidden
 }
 .circular-graphs .circular-graph {

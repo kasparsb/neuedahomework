@@ -1,0 +1,24 @@
+.data-list.events-list {
+    .time {
+        width: 200px;
+    }
+    .event {
+        width: 80px;
+    }
+    .component {
+        width: 120px;   
+    }
+    .requirement {
+        width: 120px;
+    }
+
+    .eventtype-error .event {
+        color: $eventErrorColor
+    }
+    .eventtype-success .event {
+        color: $eventSuccessColor
+    }
+    .eventtype-failure .event {
+        color: $eventSuccessFailure
+    }
+}

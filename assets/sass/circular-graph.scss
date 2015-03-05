@@ -69,12 +69,12 @@
 
 // Custom graph types
 .circular-graph.graph-error {
-    @include circular-graph-type(#ef7955);
+    @include circular-graph-type($eventErrorColor);
 }
 .circular-graph.graph-success {
-    @include circular-graph-type(#4ec281);
+    @include circular-graph-type($eventSuccessColor);
     
 }
 .circular-graph.graph-failure {
-    @include circular-graph-type(#4b98dc);
+    @include circular-graph-type($eventSuccessFailure);
 }

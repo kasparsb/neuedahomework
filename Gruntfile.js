@@ -43,7 +43,7 @@ module.exports = function(grunt){
                     },
                     // React
                     {
-                        src: 'bower_components/react/react.min.js', 
+                        src: 'bower_components/react/react.js', 
                         dest: 'assets/js/vendor/react.js'
                     },
                     // jQuery
@@ -75,6 +75,11 @@ module.exports = function(grunt){
                     {
                         src: 'bower_components/snap.svg/dist/snap.svg.js', 
                         dest: 'assets/js/vendor/snap.svg.js'
+                    },
+                    // moment
+                    {
+                        src: 'bower_components/moment/moment.js', 
+                        dest: 'assets/js/vendor/moment.js'
                     }
                 ]
             }
