@@ -1,12 +1,21 @@
 .data-list {
 
+	$oddBgColor: #ebecf0;
+
+	border-spacing: 0;
+    border-collapse: collapse;
+
 	width: 100%;
 
+	tbody tr:nth-child(odd) td {
+		background-color: $oddBgColor;
+	}
+
 	th, td {
-		font-size: 14pt;
+		font-size: 12pt;
 		font-weight: normal;
 		border-bottom: 1px solid #d4d8e1;
-		padding: 6px 10px
+		padding: 6px 14px
 	}
 
 	th {
@@ -18,8 +27,7 @@
 
 	}
 
-	tr:hover th,
-	tr:hover td {
-		background: #ebecf0
+	tbody tr:hover td {
+		background: darken($oddBgColor, 5)
 	}
 }

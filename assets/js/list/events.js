@@ -21,7 +21,7 @@ define(['react', 'underscore', 'moment'], function(React, _, moment){
                 React.DOM.td( { className: 'event' }, data.event ),
                 React.DOM.td( { className: 'component' }, data.testCase.component ),
                 React.DOM.td( { className: 'requirement' }, data.testCase.requirement ),
-                React.DOM.td( null, data.testCase.title )
+                React.DOM.td( { className: 'title' }, data.testCase.title )
             )
         },
 
@@ -39,7 +39,7 @@ define(['react', 'underscore', 'moment'], function(React, _, moment){
                         React.DOM.th( { className: 'event' }, 'Event' ),
                         React.DOM.th( { className: 'component' }, 'Component' ),
                         React.DOM.th( { className: 'requirement' }, 'Requirement' ),
-                        React.DOM.th( null, 'Title' )
+                        React.DOM.th( { className: 'title' }, 'Title' )
                     )
                 ),
                 React.DOM.tbody(null, rows)
