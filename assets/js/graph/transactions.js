@@ -64,12 +64,12 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
          * Find max and min Y axis values
          */
         yExtremes: function() {
-            var d = _(this.series).pluck('data' );
+            var d = _(this.series).pluck( 'data' );
             d = _(d).flatten();
-            
+
             this.axis.y.extremes = {
-                min: _(d).min(),
-                max: _(d).max()
+                min: d.length > 0 ? _(d).min() : 0,
+                max: d.length > 0 ? _(d).max() : 0
             }
 
             this.axis.y.extremes.delta = this.axis.y.extremes.max - this.axis.y.extremes.min;
@@ -127,22 +127,54 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             })
         },
 
+        createYAxisLabels: function() {
+            if ( !this._yLabels )
+                this._yLabels = [];
+            else {
+                for ( var i in this._yLabels )
+                    this._yLabels[i].remove();
+                this._yLabels = [];
+            }
+            
+            this._yLabels.push(
+                this.graphContainer.text( 
+                    this.padding.left - 8, 
+                    this.padding.top + 14, 
+                    this.axis.y.extremes.max+''
+                ).attr({
+                    'class': 'ylabel',
+                    textAnchor: 'end'
+                })
+            );
+            this._yLabels.push(
+                this.graphContainer.text(
+                    this.padding.left - 8,
+                    this.axis.y.size + this.padding.top - 4,
+                    this.axis.y.extremes.min+''
+                ).attr({
+                    'class': 'ylabel',
+                    textAnchor: 'end'
+                })
+            );
+        },
+
         drawSeries: function() {
             // Calculations
             this.yExtremes();
             this.steps();
+            this.createYAxisLabels();
 
             // And draw graphs
             this.series.forEach( this.drawSerie, this )
         },
 
-        drawSerie: function( serie ) {
+        drawSerie: function( serie, index ) {
             if ( typeof serie._points == 'undefined' )
                 serie._points = [];
             if ( typeof serie._lines == 'undefined' )
                 serie._lines = [];
 
-            this.drawGraphPoints( serie );
+            this.drawGraphPoints( serie, index );
             this.drawGraphLines( serie );
         },
 
@@ -162,11 +194,18 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             }, this )
         },
 
-        drawGraphPoints: function( serie ) {
+        drawGraphPoints: function( serie, index ) {
+            /**
+             * Every series has its own small offset, to ensure, that graphs are not overlaping
+             */
+            var offset = index * 3;
             serie.data.forEach( function( v, pos ){
 
-                var y = this.getValueY( v );
-                var x = this.getItemX( pos );
+                var y = this.getValueY( v ) - offset;
+                var x = this.getItemX( pos ) + offset;
+
+                
+
 
                 serie._points.push( this.drawGraphPoint( serie.name, x, y ) );
 

@@ -16,6 +16,12 @@
         stroke: #dce1e7;
     }
 
+    .ylabel {
+        font-size: 12pt;
+        width: 55px;
+        text-align: right
+    }
+
     .graph-item-error {
         stroke: $eventErrorColor;
     }
