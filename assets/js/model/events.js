@@ -27,12 +27,17 @@ return {
     // Events list
     _items: [],
 
+    // Grouped transactions by time and event type
+    _transactions: [],
+
+    _transactionKeysLimit: 20,
+
     init: function() {
         
         this._eventsNames = Object.keys( this._eventTypes );
 
         this.updateEventStats();
-
+        
         return this;
     },
 
@@ -52,6 +57,7 @@ return {
 
         events.forEach(function(ev){
             this.addEventType(ev.event);
+            this.addTransaction(ev);
         }, this);
 
         this.updateTotal();
@@ -84,6 +90,7 @@ return {
         this.addEventToList( data );
 
         this.addEventType( data.event );
+        this.addTransaction( data );
         
         this.updateTotal();
         this.updateEventStats();
@@ -94,6 +101,64 @@ return {
     addEventType: function(ev) {
         if ( typeof this._eventTypes[ev] != 'undefined' )
             this._eventTypes[ev]++;
+    },
+
+    /**
+     * Transactions are grouped by 5 minutes
+     */
+    addTransaction: function( data ) {
+        var key = this.getTransactionsGroupingKey( data );
+        var transaction = this.findTransactionByKey( key );
+        
+
+        if ( !transaction ) {
+            transaction = {
+                key: key,
+                eventTypes: {}
+            };
+
+            // Make sure all events is defined in eventTypes
+            this._eventsNames.forEach(function(ev){
+                if ( typeof transaction.eventTypes[ev] == 'undefined' )
+                    transaction.eventTypes[ev] = 0;
+            });
+
+            this._transactions.push( transaction );
+        }
+
+        // Increment
+        transaction.eventTypes[data.event]++;
+
+
+        // Limit transactions count
+        if ( this._transactions.length > this._transactionKeysLimit )
+            this._transactions.shift();
+    },
+
+    findTransactionByKey: function( key ) {
+        for ( var i in this._transactions )
+            if ( this._transactions[i].key == key )
+                return this._transactions[i];
+        return false;
+    },
+
+    getTransactionsGroupingKey: function( data ) {
+        var d = new Date(data.time);
+
+        return ['getFullYear','getMonth','getDate','getHours','getMinutes','getSeconds']
+            .map(function(segment){
+
+                if ( segment == 'getSeconds' ) {
+                    // In case of seconds divide by ten
+                    return Math.round( d[segment]() / 10 );
+                }
+                else {
+                    return d[segment]();
+                }
+
+
+            })
+            .join('-');
     },
 
     updateTotal: function() {
@@ -120,6 +185,25 @@ return {
             count: this._eventTypes[ev],
             caption: ev
         }
+    },
+
+    /**
+     * Prepare transactions data for consumption in graph
+     */
+    getTransactionsForGraph: function( eventNames ) {
+        return eventNames.map( function(ev){
+            
+            var data = [];
+            for ( var i in this._transactions )
+                data.push( this._transactions[i].eventTypes[ev] );
+            
+            return {
+                label: ev,
+                name: ev,
+                data: data
+            }
+            
+        }, this );
     },
 
     on: function( eventName, cb ) {

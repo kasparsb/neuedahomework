@@ -18,7 +18,7 @@ return React.createClass({
     _getState: function() {
         var s = {
             items: EventsModel._items,
-            transactions: []//EventsModel._transactions,
+            transactions: EventsModel.getTransactionsForGraph( this._graphEvents )
         }
 
         this._graphEvents.forEach(function(ev){

@@ -41,17 +41,17 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             {
                 label: 'Error',
                 name: 'error',
-                data: [10, 20, 5, 2, 18, 19, 34, 20, 5, 7, 9, 16]
+                data: [10, 20, 5, 2, 18, 19, 34, 20, 5, 7, 9, 16, 10, 20, 5, 2, 18, 19, 34, 20, 5, 7, 9, 16]
             },
             {
                 label: 'Success',
                 name: 'success',
-                data: [20, 14, 12, 2, 20, 44, 10, 20, 5, 2, 18, 34]
+                data: [20, 14, 12, 2, 20, 44, 10, 20, 5, 2, 18, 34, 20, 14, 12, 2, 20, 44, 10, 20, 5, 2, 18, 34]
             },
             {
                 label: 'failure',
                 name: 'failure',
-                data: [34, 20, 5, 7, 9, 16, 2, 18, 19, 34, 20, 24]
+                data: [34, 20, 5, 7, 9, 16, 2, 18, 19, 34, 20, 24, 34, 20, 5, 7, 9, 16, 2, 18, 19, 34, 20, 24]
             }
         ],
 
@@ -93,10 +93,6 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             this.createXAxis();
             this.createYAxis();
 
-            this.yExtremes();
-
-            this.steps();
-
             this.drawSeries();
         },
 
@@ -132,6 +128,11 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
         },
 
         drawSeries: function() {
+            // Calculations
+            this.yExtremes();
+            this.steps();
+
+            // And draw graphs
             this.series.forEach( this.drawSerie, this )
         },
 
@@ -155,6 +156,12 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             serie._lines = [];
         },
 
+        destroyGraphs: function() {
+            this.series.forEach( function( serie ){
+                this.destroySerieGraph( serie )
+            }, this )
+        },
+
         drawGraphPoints: function( serie ) {
             serie.data.forEach( function( v, pos ){
 
@@ -167,7 +174,7 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
         },
 
         drawGraphPoint: function( name, x, y ) {
-            var el = this.graphContainer.circle( x, y, 3 ).attr({
+            var el = this.graphContainer.circle( x, y, 2 ).attr({
                 'class': 'graph-point graph-item-'+name
             });
 
@@ -216,7 +223,17 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
         },
 
         componentDidMount: function() {
+
+            this.series = _( this.props.items ).clone();
+
             this._createGraph();
+        },
+
+        componentWillReceiveProps: function( newProps ) {
+            this.destroyGraphs();
+
+            this.series = _( newProps.items ).clone();
+            this.drawSeries();
         },
 
         render: function() {
