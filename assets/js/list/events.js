@@ -1,14 +1,14 @@
 /**
  * Events list
  */
-define(['react', 'underscore', 'moment'], function(React, _, moment){
+define(['react'], function(React, moment){
 
     return React.createClass({
         displayName: 'EventsList',
 
         createRow: function( data ) {
 
-            var d = moment(data.time);
+            var d = new Date(data.time);
 
             return React.DOM.tr(
                 {
@@ -16,7 +16,7 @@ define(['react', 'underscore', 'moment'], function(React, _, moment){
                     className: 'eventtype-'+data.event
                 },
                 React.DOM.td( { className: 'time' }, 
-                    d.format('YYYY-MM-DD hh:mm:ss')
+                    d.toLocaleDateString()+' '+d.toLocaleTimeString()
                 ),
                 React.DOM.td( { className: 'event' }, data.event ),
                 React.DOM.td( { className: 'component' }, data.testCase.component ),

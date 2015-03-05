@@ -67,12 +67,16 @@ define(['react', 'underscore', 'snapsvg'], function(React, _, Snap){
          * Component is ready. Now its time to create graph elements
          */
         componentDidMount: function() {
+            var mthis = this;
+
             this._graphContainer = new Snap( this.getDOMNode().getElementsByTagName('svg')[0] );
             
             this._createGraphs();
 
             // Create debounced animate callback
-            this._anim = _.debounce( _.bind( this._animateGraphState, this ), 50 );
+            this._anim = _.debounce( function( props ){
+                mthis._animateGraphState( props )
+            }, 50 );
             this._anim( this.props );
         },
 
@@ -104,10 +108,8 @@ define(['react', 'underscore', 'snapsvg'], function(React, _, Snap){
                     {
                         className: 'graph-legend'
                     }, 
-                    [
-                        React.DOM.span({ className:'caption' }, this.props.item.caption),
-                        React.DOM.span({ className:'value' }, this.props.item.count)
-                    ]
+                    React.DOM.span({ className:'caption' }, this.props.item.caption),
+                    React.DOM.span({ className:'value' }, this.props.item.count)
                 )
             )
         }
