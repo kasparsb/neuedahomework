@@ -76,5 +76,5 @@
     
 }
 .circular-graph.graph-failure {
-    @include circular-graph-type($eventSuccessFailure);
+    @include circular-graph-type($eventFailureColor);
 }

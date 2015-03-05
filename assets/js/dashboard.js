@@ -5,6 +5,7 @@ define(function(require){
 
 var React = require('react'),
     CircularGraph = require('graph/circular'),
+    TransactionsGraph = require('graph/transactions'),
     EventsList = require('list/events'),
     Header = require('el/header'),
     EventsModel = require('model/events');
@@ -16,7 +17,8 @@ return React.createClass({
 
     _getState: function() {
         var s = {
-            items: EventsModel._items
+            items: EventsModel._items,
+            transactions: []//EventsModel._transactions,
         }
 
         this._graphEvents.forEach(function(ev){
@@ -71,6 +73,14 @@ return React.createClass({
                     className: 'circular-graphs doc' 
                 }, 
                 graphs
+            ),
+            // Transactions graph
+            React.createElement(
+                TransactionsGraph,
+                {
+                    className: 'doc',
+                    items: this.state.transactions
+                }
             ),
             // latest events list
             React.createElement( Header, { title: 'Test events list' } ),

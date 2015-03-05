@@ -1,0 +1,36 @@
+.transactions-graph {
+    .axis {
+        stroke-width: 4px;
+        stroke: #dce1e7;
+    }
+
+    .graph-point {
+        stroke-width: 2px;
+        stroke: #dce1e7;
+        fill: #dce1e7
+    }
+    .graph-line {
+        stroke-width: 2px;
+        stroke: #dce1e7;
+    }
+
+    .graph-item-error {
+        stroke: $eventErrorColor;
+    }
+    .graph-item-failure {
+        stroke: $eventFailureColor;
+    }
+    .graph-item-success {
+        stroke: $eventSuccessColor;
+    }
+
+    .graph-point.graph-item-error {
+        fill: $eventErrorColor;
+    }
+    .graph-point.graph-item-failure {
+        fill: $eventFailureColor;
+    }
+    .graph-point.graph-item-success {
+        fill: $eventSuccessColor;
+    }
+}
