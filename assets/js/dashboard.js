@@ -4,7 +4,6 @@
 define(function(require){
 
 var React = require('react'),
-    _ = require('underscore'),
     CircularGraph = require('graph/circular'),
     EventsList = require('list/events'),
     Header = require('el/header'),
@@ -32,9 +31,12 @@ return React.createClass({
     },
 
     componentDidMount: function() {
+        var mthis = this;
         EventsModel
             .init()
-            .on( 'update', _.bind( this.updateEvents, this ))
+            .on( 'update', function(){
+                mthis.updateEvents()
+            })
             .fetch();
     },
 

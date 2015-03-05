@@ -4,7 +4,6 @@
 define(function(require){
 
 var io = require('socketio'),
-    _ = require('underscore');
     $ = require('jquery');
 
 return {
@@ -31,7 +30,7 @@ return {
     init: function() {
         
         this._eventsNames = Object.keys( this._eventTypes );
-        
+
         this.updateEventStats();
 
         return this;
@@ -41,7 +40,11 @@ return {
      * Load events from history endpoint
      */
     loadHistoricEvents: function() {
-        return $.get( 'http://testevents.neueda.lv/history', _.bind( this.handleHistoryEvents, this ), 'json' );
+        var mthis = this;
+
+        return $.get( 'http://testevents.neueda.lv/history', function( events ){
+            mthis.handleHistoryEvents( events )
+        }, 'json' );
     },
 
     handleHistoryEvents: function( events ) {
@@ -63,12 +66,15 @@ return {
      * Setup live data polling
      */
     setupPolling: function() {
-        
+        var mthis = this;
+
         this._socket = io('http://testevents.neueda.lv:80', {
             path: '/live'
         });
         
-        this._socket.on('test', _.bind( this.pushEvent, this ));
+        this._socket.on('test', function( data ){
+            mthis.pushEvent( data )
+        } );
     },
 
     /**
@@ -91,9 +97,11 @@ return {
     },
 
     updateTotal: function() {
-        this._total = this._eventsNames.reduce( _.bind( function(m, ev) { 
-            return this._eventTypes[ev] + m 
-        }, this ), 0 );
+        var mthis = this;
+
+        this._total = this._eventsNames.reduce( function(m, ev) { 
+            return mthis._eventTypes[ev] + m 
+        }, 0 );
     },
 
     /**
@@ -131,15 +139,17 @@ return {
     },
 
     fetch: function() {
+        var mthis = this;
+
         // Load history events and then start polling for new events
         this.loadHistoricEvents()
-            .done( _.bind( function(){
+            .done( function(){
                 
-                this.trigger( 'update' );
+                mthis.trigger( 'update' );
 
                 // Start polling for new events
-                this.setupPolling()
-            }, this ) );
+                mthis.setupPolling()
+            } );
     }
 }
 
