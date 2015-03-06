@@ -5,8 +5,7 @@ requirejs.config({
         jquery:  'vendor/jquery',
         underscore:  'vendor/underscore',
         snapsvg: 'vendor/snap.svg',
-        react: 'vendor/react',
-        moment: 'vendor/moment'
+        react: 'vendor/react'
     },
     urlArgs: 'r=' + (new Date()).getTime(),
 });
