@@ -228,6 +228,17 @@ return {
         }, this );
     },
 
+    getTransactionsLabelsForGraph: function() {
+        return this._transactions.map(function(t){
+            return t.key.split('-').slice( 3 ).map(function(s, i){
+                if ( i < 2 )
+                    return s.length < 2 ? '0'+s : s;
+                else
+                    return s+'0';
+            }).join(':')
+        });
+    },
+
     getItems: function() {
         var r = [];
         for ( var i in this._items )

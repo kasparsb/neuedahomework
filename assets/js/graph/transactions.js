@@ -13,7 +13,7 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             top: 20,
             left: 60,
             right: 20,
-            bottom: 20
+            bottom: 70
         },
 
         axis: {
@@ -127,6 +127,31 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             })
         },
 
+        createXAxisLabels: function() {
+            if ( !this._xLabels )
+                this._xLabels = [];
+            else {
+                for ( var i in this._xLabels )
+                    this._xLabels[i].remove();
+                this._xLabels = [];
+            }
+
+            this.props.labels.forEach(function(label, i){
+                var x = this.getItemX( i ), 
+                    y = this.axis.y.size + this.padding.top + 4;
+
+                this._xLabels.push(
+                    this.graphContainer.text( x, y, label ).attr({
+                        'class': 'xlabel',
+                        textAnchor: 'start',
+                        alignmentBaseline: 'before-edge',
+                        transform: 'rotate(45 '+x+' '+y+')'
+                    })
+                )
+
+            }, this)
+        },
+
         createYAxisLabels: function() {
             if ( !this._yLabels )
                 this._yLabels = [];
@@ -162,6 +187,7 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
             // Calculations
             this.yExtremes();
             this.steps();
+            this.createXAxisLabels();
             this.createYAxisLabels();
 
             // And draw graphs
@@ -203,9 +229,6 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
 
                 var y = this.getValueY( v ) - offset;
                 var x = this.getItemX( pos ) + offset;
-
-                
-
 
                 serie._points.push( this.drawGraphPoint( serie.name, x, y ) );
 
@@ -258,7 +281,7 @@ define(['react', 'jquery', 'underscore', 'snapsvg'], function(React, $, _, Snap)
 
             var p = (position)/total;
 
-            return this.axis.x.size * p + this.padding.left + 10;
+            return (this.axis.x.size-30) * p + this.padding.left + 10;
         },
 
         componentDidMount: function() {

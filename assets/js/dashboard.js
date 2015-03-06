@@ -20,6 +20,7 @@ return React.createClass({
         var s = {
             items: EventsModel.getItems(),
             transactions: EventsModel.getTransactionsForGraph( this._graphEvents ),
+            transactionsLabels: EventsModel.getTransactionsLabelsForGraph(),
             requirements: EventsModel._requirement
         }
 
@@ -98,7 +99,8 @@ return React.createClass({
                 TransactionsGraph,
                 {
                     className: 'doc',
-                    items: this.state.transactions
+                    items: this.state.transactions,
+                    labels: this.state.transactionsLabels
                 }
             ),
             // latest events list
