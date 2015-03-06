@@ -43,7 +43,7 @@ module.exports = function(grunt){
                     },
                     // React
                     {
-                        src: 'bower_components/react/react.js', 
+                        src: 'bower_components/react/react.min.js', 
                         dest: 'assets/js/vendor/react.js'
                     },
                     // jQuery
@@ -83,10 +83,17 @@ module.exports = function(grunt){
             compile: {
                 options: {
                     baseUrl: 'assets/js',
-                    include: 'app',
+                    name: 'app',
                     out: 'build/app.js',
                     wrap: true,
                     optimize: 'none',
+                    paths: {
+                        socketio: 'vendor/socket.io',
+                        jquery:  'vendor/jquery',
+                        underscore:  'vendor/underscore',
+                        snapsvg: 'vendor/snap.svg',
+                        react: 'vendor/react'
+                    },
                     onModuleBundleComplete: function (data) {
                         var fs = require('fs'),
                             amdclean = require('amdclean'),
