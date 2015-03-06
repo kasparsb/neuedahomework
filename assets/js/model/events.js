@@ -32,6 +32,11 @@ return {
 
     _transactionKeysLimit: 20,
 
+    // List of unique requirements
+    _requirement: [],
+
+    _filterRequirement: '',
+
     init: function() {
         
         this._eventsNames = Object.keys( this._eventTypes );
@@ -56,8 +61,9 @@ return {
         this._items = events;
 
         events.forEach(function(ev){
-            this.addEventType(ev.event);
-            this.addTransaction(ev);
+            this.addEventType( ev.event );
+            this.addTransaction( ev );
+            this.addRequirement( ev.testCase.requirement );
         }, this);
 
         this.updateTotal();
@@ -91,6 +97,7 @@ return {
 
         this.addEventType( data.event );
         this.addTransaction( data );
+        this.addRequirement( data.testCase.requirement );
         
         this.updateTotal();
         this.updateEventStats();
@@ -103,13 +110,28 @@ return {
             this._eventTypes[ev]++;
     },
 
+    addRequirement: function( v ) {
+        if ( _( this._requirement ).indexOf( v ) < 0 )
+            this._requirement.push( v );
+    },
+
+    allowItem: function( data ) {
+        // Filter transaction if neccessary
+        if ( this._filterRequirement )
+            return data.testCase.requirement == this._filterRequirement;
+        return true;
+    },
+
     /**
      * Transactions are grouped by 5 minutes
      */
     addTransaction: function( data ) {
+        // Filter transaction if neccessary
+        if ( !this.allowItem( data ) )
+            return;
+
         var key = this.getTransactionsGroupingKey( data );
         var transaction = this.findTransactionByKey( key );
-        
 
         if ( !transaction ) {
             transaction = {
@@ -206,6 +228,14 @@ return {
         }, this );
     },
 
+    getItems: function() {
+        var r = [];
+        for ( var i in this._items )
+            if ( this.allowItem( this._items[i] ) )
+                r.push( this._items[i] );
+        return r;
+    },
+
     on: function( eventName, cb ) {
         if ( typeof this._listeners[eventName] == 'undefined' )
             this._listeners[eventName] = [];
@@ -234,6 +264,17 @@ return {
                 // Start polling for new events
                 mthis.setupPolling()
             } );
+    },
+
+    filterRequirements: function( requirement ) {
+        this._filterRequirement = requirement;
+
+        // Recalculate transactions
+        this._transactions = [];
+        for ( var i in this._items )
+            this.addTransaction( this._items[i] );
+
+        this.trigger( 'update' );
     }
 }
 

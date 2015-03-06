@@ -8,7 +8,8 @@ var React = require('react'),
     TransactionsGraph = require('graph/transactions'),
     EventsList = require('list/events'),
     Header = require('el/header'),
-    EventsModel = require('model/events');
+    EventsModel = require('model/events'),
+    Filter = require('el/filter');
 
 return React.createClass({
     displayName: 'Dashboard',
@@ -17,8 +18,9 @@ return React.createClass({
 
     _getState: function() {
         var s = {
-            items: EventsModel._items,
-            transactions: EventsModel.getTransactionsForGraph( this._graphEvents )
+            items: EventsModel.getItems(),
+            transactions: EventsModel.getTransactionsForGraph( this._graphEvents ),
+            requirements: EventsModel._requirement
         }
 
         this._graphEvents.forEach(function(ev){
@@ -30,6 +32,10 @@ return React.createClass({
 
     updateEvents: function() {
         this.setState( this._getState() );
+    },
+
+    handleFilterSelect: function( requirement ) {
+        EventsModel.filterRequirements( requirement );
     },
 
     componentDidMount: function() {
@@ -73,6 +79,19 @@ return React.createClass({
                     className: 'circular-graphs doc' 
                 }, 
                 graphs
+            ),
+            // Events filter
+            React.DOM.div(
+                {
+                    className: 'transactions-filter doc'
+                },
+                React.createElement(
+                    Filter,
+                    {
+                        items: this.state.requirements,
+                        onSelect: this.handleFilterSelect
+                    }
+                )
             ),
             // Transactions graph
             React.createElement(

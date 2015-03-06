@@ -5,6 +5,7 @@
 @import 'circular-graph';
 @import 'transactions-graph';
 @import 'events-list';
+@import 'events-filter';
 
 section.main {
     padding: 0 0 40px
@@ -30,4 +31,9 @@ section.main {
         width: 100%;
         height: 100%;
     }
+}
+
+.transactions-filter {
+    height: 30px;
+    position: relative
 }
