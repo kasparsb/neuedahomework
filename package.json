@@ -1,6 +1,6 @@
 {
     "name": "neuedahomework",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Kaspars Bulins",
     "description": "Neueda homework",
     "devDependencies": {
@@ -8,6 +8,7 @@
         "matchdep": "*",
         "grunt-bump": "*",
         "amdclean": "~2.3.0",
+        "grunt-contrib-uglify": "*",
         "grunt-contrib-cssmin": "*",
         "grunt-contrib-copy": "*",
         "grunt-contrib-sass": "0.4.0",
