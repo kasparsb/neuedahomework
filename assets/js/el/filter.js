@@ -10,6 +10,22 @@ define(['react', 'underscore', 'el/suggestions'], function(React, _, Suggestions
                 found: []
             }
         },
+
+        handleKeyDown: function(ev) {
+            
+            if (ev.key == 'ArrowDown')
+                this.refs.suggestions.next();
+            else if (ev.key == 'ArrowUp')
+                this.refs.suggestions.prev();
+            else if (ev.key == 'Enter') {
+                var s = this.refs.search.getDOMNode().value;
+                if ( s == '' )    
+                    this.props.onSelect( '' );
+                else {
+                    this.refs.suggestions.clickSelected()
+                }
+            }
+        },
         
         handleChange: function( ev ) {
 
@@ -62,6 +78,7 @@ define(['react', 'underscore', 'el/suggestions'], function(React, _, Suggestions
                         ref: 'search',
                         type: 'text',
                         id: 'fieldfilter',
+                        onKeyDown: this.handleKeyDown,
                         onChange: _.debounce( this.handleChange, 20 ),
                         onFocus: this.handleFocus,
                         onBlur: this.handleBlur

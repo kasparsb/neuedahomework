@@ -1,9 +1,51 @@
 /**
  * Simple header element
  */
-define(['react'], function(React){
+define(['react', 'jquery'], function(React, $){
     return React.createClass({
         displayName: 'Suggestions',
+
+        /**
+         * Current selected suggestion in list
+         */
+        _current: -1,
+
+        /**
+         * Move to previous suggestion
+         */
+        prev: function() {
+            this._current--;
+            this._validateCurrent();
+            this._selectItem(this._current);
+        },
+
+        /**
+         * Move to next suggestion
+         */
+        next: function() {
+            this._current++;
+            this._validateCurrent();
+            this._selectItem(this._current);
+        },
+
+        _validateCurrent: function() {
+            if ( this._current < 0 )
+                this._current = 0;
+            if ( this._current >= this.props.items.length )
+                this._current = this.props.items.length-1;
+        },
+
+        /**
+         * Select item from list by index
+         */
+        _selectItem: function( index ) {
+            $( this.getDOMNode() ).find('.item.selected').removeClass('selected');
+            $( this.getDOMNode() ).find('.item:eq('+index+')').addClass('selected');
+        },
+
+        clickSelected: function() {
+            $( this.getDOMNode() ).find('.item.selected').click();
+        },
 
         show: function() {
             this.getDOMNode().style.display = 'block';
@@ -29,12 +71,14 @@ define(['react'], function(React){
         },
 
         componentWillReceiveProps: function(newProps) {
+            if ( this.props.items.length != newProps.items.length )
+                this._current = -1;
             this.checkVisibility( newProps.items );
         },
         
         render: function() {
 
-            var items = this.props.items.map(function(v, i){
+            this.items = this.props.items.map(function(v, i){
                 return React.DOM.div(
                     {
                         key: v,
@@ -49,7 +93,7 @@ define(['react'], function(React){
                 {
                     className: 'suggestions'
                 },
-                items
+                this.items
             )
         }
     })

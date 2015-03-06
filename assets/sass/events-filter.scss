@@ -27,17 +27,21 @@
         right: 20px;
         width: 216px;
         background: #fff;
-        border: 1px solid $borderColor
-    }
+        border: 1px solid $borderColor;
 
-    .suggestions .item {
-        padding: 2px 8px;
-        font-size: 12pt;
-        border-top: 1px solid $borderColor;
-        cursor: pointer
-    }
+        .item {
+            padding: 2px 8px;
+            font-size: 12pt;
+            border-top: 1px solid $borderColor;
+            cursor: pointer
+        }
 
-    .suggestions .item:first-child {
-        border-top: 0
+        .item:first-child {
+            border-top: 0
+        }
+
+        .item.selected {
+            background: #ddd
+        }
     }
 }
